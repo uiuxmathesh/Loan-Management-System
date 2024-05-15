@@ -3,7 +3,7 @@
 class PropertyUtil:
 
     @staticmethod
-    def getPropertytring():
+    def getPropertyString():
         SERVER_NAME = "Mathesh-PC"
         DATABASE_NAME = "LoanManager"
         TRUSTED_CONNECTION = "Yes"
