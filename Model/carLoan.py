@@ -25,3 +25,7 @@ class CarLoan(Loan):
             print("Value must be an Number.")
             return
         self._carValue = value
+
+    @property
+    def interest_rate(self):
+        return self._interest_rate

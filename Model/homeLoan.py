@@ -26,3 +26,7 @@ class HomeLoan(Loan):
             return
         else:
             self._property_value = value
+
+    @property
+    def interest_rate(self):
+        return self._interest_rate

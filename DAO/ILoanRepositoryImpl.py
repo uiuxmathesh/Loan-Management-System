@@ -8,16 +8,16 @@ class ILoanRepositoryImpl(ILoanRepository):
         self.connection = DBUtil.getDBConn()
         self.cursor = self.connection.cursor()
 
-    def applyLoan(self, Loan):
+    def applyLoan(self, Loan): # Verified
         query = """INSERT INTO [Loan] (
-                                    [LoanID], [CustomerID], 
+                                    [CustomerID], 
                                     [principal_amount], [interest_rate], 
                                     [loan_term], [loan_type], 
                                     [loan_status]
                                     ) 
-                                    VALUES (?, ?, ?, ?, ?, ?, ?)""" 
+                                    VALUES ( ?, ?, ?, ?, ?, ?)""" 
         values = (
-                Loan.loanID, Loan.customerID, 
+                Loan.customerID, 
                 Loan.principal_amount, Loan.interest_rate, 
                 Loan.term, Loan.type, 
                 'Pending'
@@ -27,6 +27,12 @@ class ILoanRepositoryImpl(ILoanRepository):
         if confirmation == 'Y':
             self.cursor.execute(query, values)
             self.connection.commit()
+            query = """SELECT IDENT_CURRENT('Loan') AS [LoanID]"""
+            self.cursor.execute(query)
+            result = self.cursor.fetchone()[0]
+            print(f"Loan application successful. Loan ID: {result}")
+            print("Keep this ID for future reference.")
+            self.cursor.commit()
         else:
             print("Loan application cancelled.")
 
@@ -56,6 +62,7 @@ class ILoanRepositoryImpl(ILoanRepository):
             status = 'Rejected'
         query = """ UPDATE [Loan] SET [loan_status] = ? WHERE [LoanID] = ?"""
         self.cursor.execute(query, (status, LoanId))
+        self.cursor.commit()
         return status
 
     def calculateEMI(self, LoanId:int) -> float:
@@ -79,7 +86,16 @@ class ILoanRepositoryImpl(ILoanRepository):
             print("Payment Rejected. Insufficient payment.")
             return
         else:
-            pass
+            query = """ SELECT [principal_amount] FROM [Loan] WHERE [LoanID] = ?"""
+            self.cursor.execute(query, (LoanId,))
+            principal_amount = self.cursor.fetchone()[0]
+            initial_principal = principal_amount
+            principal_amount -= amount
+            query = """ UPDATE [Loan] SET [principal_amount] = ? WHERE [LoanID] = ?"""
+            self.cursor.execute(query, (principal_amount, LoanId))
+            self.cursor.commit()
+            message = f"Payment successful.Initial amount: {initial_principal} Remaining amount: {principal_amount}"
+            print(message)
 
     def getAllLoans(self) -> list:
         query = """ SELECT * FROM [Loan]"""

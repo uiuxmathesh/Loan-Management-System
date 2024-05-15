@@ -43,7 +43,7 @@ class Loan:
             print("Amount must be an Number.")
             return
         else:
-            self._amount = amount
+            self._principal_amount = amount
 
     @property
     def term(self):
