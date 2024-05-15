@@ -1,6 +1,12 @@
 from .ILoanRepository import ILoanRepository
+from Exceptions import InvalidLoanException
+from Util import DBUtil
 
 class ILoanRepositoryImpl(ILoanRepository):
+
+    def __init__(self):
+        self.connection = DBUtil.getDBConn()
+        self.cursor = self.connection.cursor()
 
     def applyLoan(self, Loan):
         query = """INSERT INTO [Loan] (
@@ -16,7 +22,13 @@ class ILoanRepositoryImpl(ILoanRepository):
                 Loan.term, Loan.type, 
                 'Pending'
                 )
-        self.cursor.execute(query, values)
+        print(Loan)
+        confirmation = input("Do you want to proceed with the loan application? (Y/N): ")
+        if confirmation == 'Y':
+            self.cursor.execute(query, values)
+            self.connection.commit()
+        else:
+            print("Loan application cancelled.")
 
     def calculateInterest(self, LoanId:int) -> float:
         try:
@@ -47,16 +59,22 @@ class ILoanRepositoryImpl(ILoanRepository):
         return status
 
     def calculateEMI(self, LoanId:int) -> float:
-        result = self.getLoanbyId(LoanId)
-        principal_amount = result[2]
-        monthy_interest = (result[3] / 12) / 100
-        loan_term = result[4]
-        emi = (principal_amount * monthy_interest * (1 + monthy_interest) ** loan_term) / ((1 + monthy_interest) ** loan_term - 1)
-        return emi
+        try:
+            result = self.getLoanbyId(LoanId)
+        except Exception as e:
+            print(e)
+            return
+        else:
+            principal_amount = result[2]
+            monthy_interest = (result[3] / 12) / 100
+            loan_term = result[4]
+            emi = (principal_amount * monthy_interest * (1 + monthy_interest) ** loan_term) / ((1 + monthy_interest) ** loan_term - 1)
+            return emi
         
-
     def loanRepayment(self, LoanId:int, amount:float) -> float:
         monthly_emi = self.calculateEMI(LoanId)
+        if monthly_emi == None:
+            return
         if amount < monthly_emi:
             print("Payment Rejected. Insufficient payment.")
             return
@@ -74,6 +92,6 @@ class ILoanRepositoryImpl(ILoanRepository):
         self.cursor.execute(query, (LoanId,))
         result = self.cursor.fetchone()
         if len(result) == 0:
-            pass # handle error
+            raise InvalidLoanException(LoanId)
         else:
             return result
