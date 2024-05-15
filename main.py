@@ -92,6 +92,7 @@ class Main:
 
                 elif choice == 8:
                     print("Exiting the application....")
+                    self.loanService.connection.close()
                     return
 
                 else:
