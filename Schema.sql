@@ -20,14 +20,13 @@ CREATE TABLE [Customer](
 
 IF OBJECT_ID(N'Loan') IS NULL
 CREATE TABLE [Loan](
-	[LoanID] int NOT NULL,
+	[LoanID] int NOT NULL IDENTITY(100,1),
 	[CustomerID] int,
 	[principal_amount] float,
 	[interest_rate] float,
 	[loan_term] int,
 	[loan_type] varchar(255) NOT NULL CHECK ([loan_type]IN ('CarLoan','HomeLoan')),
 	[loan_status] varchar(255) NOT NULL CHECK ([loan_status]IN ('Pending','Approved')),
-	CONSTRAINT loan_pk PRIMARY KEY ([CustomerID]),
+	CONSTRAINT loan_pk PRIMARY KEY ([LoanID]),
 	CONSTRAINT customer_loan_fk FOREIGN KEY ([CustomerID]) REFERENCES Customer([CustomerID])
 );
-

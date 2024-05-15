@@ -7,14 +7,13 @@ VALUES
     (5, 'David Lee', 'david.lee@example.com', '7778889999', '654 Pine St, Elsewhere, USA', 780);
 
 
-INSERT INTO Loan (LoanID, CustomerID, principal_amount, interest_rate, loan_term, loan_type, loan_status)
+INSERT INTO Loan (CustomerID, principal_amount, interest_rate, loan_term, loan_type, loan_status)
 VALUES
-    (101, 1, 20000, 5.5, 36, 'CarLoan', 'Pending'),
-    (102, 2, 300000, 4.25, 360, 'HomeLoan', 'Approved'),
-    (103, 3, 15000, 6.0, 24, 'CarLoan', 'Approved'),
-    (104, 4, 250000, 3.75, 240, 'HomeLoan', 'Approved'),
-    (105, 5, 10000, 7.0, 12, 'CarLoan', 'Pending');
-
+    ( 1, 20000, 5.5, 36, 'CarLoan', 'Pending'),
+    ( 2, 300000, 4.25, 360, 'HomeLoan', 'Approved'),
+    ( 3, 15000, 6.0, 24, 'CarLoan', 'Approved'),
+    ( 4, 250000, 3.75, 240, 'HomeLoan', 'Approved'),
+    ( 5, 10000, 7.0, 12, 'CarLoan', 'Pending');
 
 SELECT * FROM [Customer]
 
