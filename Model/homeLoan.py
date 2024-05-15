@@ -30,3 +30,6 @@ class HomeLoan(Loan):
     @property
     def interest_rate(self):
         return self._interest_rate
+
+    def __str__(self):
+        return f"Customer ID: {self.customerID}, Property Address: {self.property_address}, Property Value: {self.property_value}, Interest Rate: {self.interest_rate}, Loan Amount: {self.principal_amount}, Loan Term: {self.term}"

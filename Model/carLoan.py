@@ -29,3 +29,6 @@ class CarLoan(Loan):
     @property
     def interest_rate(self):
         return self._interest_rate
+    
+    def __str__(self):
+        return f"Customer ID: {self.customerID}, Car Model: {self.carModel}, Car Value: {self.carValue}, Interest Rate: {self.interest_rate}, Loan Amount: {self.principal_amount}, Loan Term: {self.term}"

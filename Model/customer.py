@@ -76,4 +76,7 @@ class Customer:
             return
         self._credit_score = credit_score
 
+    def __str__(self):
+        return f"Customer ID: {self.customerID}, Name: {self.name}, Email: {self.email}, Phone: {self.phone}, Address: {self.address}, Credit Score: {self.credit_score}"
+
     
